@@ -18,9 +18,9 @@ def get_date(tags):
     date = str(tags["EXIF DateTimeOriginal"])
     date = date.replace(":", "")
     date = date.replace(" ", "")
-    return date[0:8] + "_" + date[8:14]
+    return date[0:8] + "_" + date[8:12]
 
-def get_video_date(filename):
+def get_alternate_date(filename):
     date = str(time.ctime(os.path.getmtime(filename)))
     date = date.replace(":", "")
     date = date.replace(" ", "")
@@ -58,163 +58,59 @@ def get_video_date(filename):
     return final_date
 
 #change file names based on extention===========================================
-#rename heic files
-def work_heic(filename):
+def work(filename, extension):
     tags = get_exif(filename)
     date = get_date(tags)
 
     # rename image file to YYYYMMDD_HHMMSS format.
     # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date+".HEIC"):
+    if os.path.exists(date+extension):
         i = 1
         while True:
-            if os.path.exists(date+"_"+str(i)+".HEIC"):
+            if os.path.exists(date+"_"+str(i)+extension):
                 i += 1
             else:
-                os.rename(filename, date+"_"+str(i)+".HEIC")
-                print(date+"_"+str(i)+".HEIC")
+                os.rename(filename, date+"_"+str(i)+extension)
+                print(date+"_"+str(i)+extension)
                 break
     else:
-        os.rename(filename, date+".HEIC")
-        print(date+".HEIC")
+        os.rename(filename, date+extension)
+        print(date+extension)
 
-#rename jpg files
-def work_jpg(filename):
-    tags = get_exif(filename)
-    date = get_date(tags)
+def work_alternate(filename, extension):
+    date = get_alternate_date(filename)
 
     # rename image file to YYYYMMDD_HHMMSS format.
     # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date+".JPG"):
+    if os.path.exists(date+extension):
         i = 1
         while True:
-            if os.path.exists(date+"_"+str(i)+".JPG"):
+            if os.path.exists(date+"_"+str(i)+extension):
                 i += 1
             else:
-                os.rename(filename, date+"_"+str(i)+".JPG")
-                print(date+"_"+str(i)+".JPG")
+                os.rename(filename, date+"_"+str(i)+extension)
+                print(date+"_"+str(i)+extension)
                 break
     else:
-        os.rename(filename, date+".JPG")
-        print(date+".JPG")
-        
-#rename jpeg files
-def work_jpeg(filename):
-    tags = get_exif(filename)
-    date = get_date(tags)
-
-    # rename image file to YYYYMMDD_HHMMSS format.
-    # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date+".JPEG"):
-        i = 1
-        while True:
-            if os.path.exists(date+"_"+str(i)+".JPEG"):
-                i += 1
-            else:
-                os.rename(filename, date+"_"+str(i)+".JPEG")
-                print(date+"_"+str(i)+".JPEG")
-                break
-    else:
-        os.rename(filename, date+".JPEG")
-        print(date+".JPEG")
-
-#rename png files
-def work_png(filename):
-    tags = get_exif(filename)
-    date = get_date(tags)
-
-    # rename image file to YYYYMMDD_HHMMSS format.
-    # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date+".PNG"):
-        i = 1
-        while True:
-            if os.path.exists(date+"_"+str(i)+".PNG"):
-                i += 1
-            else:
-                os.rename(filename, date+"_"+str(i)+".PNG")
-                print(date+"_"+str(i)+".PNG")
-                break
-    else:
-        os.rename(filename, date+".PNG")
-        print(date+".PNG")
-
-#rename mov files
-def work_mov(filename):
-    date = get_video_date(filename)
-
-    # rename image file to YYYYMMDD_HHMMSS format.
-    # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date + ".MOV"):
-        i = 1
-        while True:
-            if os.path.exists(date+"_"+str(i)+".MOV"):
-                i += 1
-            else:
-                os.rename(filename, date+"_"+str(i)+".MOV")
-                print(date+"_"+str(i)+".MOV")
-                break
-    else:
-        os.rename(filename, date+".MOV")
-        print(date+".MOV")
-
-def work_mp4(filename):
-    date = get_video_date(filename)
-
-    # rename image file to YYYYMMDD_HHMMSS format.
-    # if file already exists, add numbering to the end of the file name
-    if os.path.exists(date+".MP4"):
-        i = 1
-        while True:
-            if os.path.exists(date+"_"+str(i)+".MP4"):
-                i += 1
-            else:
-                os.rename(filename, date+"_"+str(i)+".MP4")
-                print(date+"_"+str(i)+".MP4")
-                break
-    else:  
-        os.rename(filename, date+".MP4")
-        print(date+".MP4")
+        os.rename(filename, date+extension)
+        print(date+extension)
 
 #===============================================================================
 def work_all(directory):
+    valid_extensions = [".HEIC", ".heic", ".JPG", ".jpg", ".JPEG", ".jpeg", ".PNG", ".png", ".MOV", ".mov", ".MP4", ".mp4"]
+
     for filename in os.listdir(directory):
-        if filename.endswith(".HEIC") or filename.endswith(".heic"):
-            try:
-                work_heic(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        elif filename.endswith(".JPG") or filename.endswith(".jpg"):
-            try:
-                work_jpg(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        elif filename.endswith(".JPEG") or filename.endswith(".jpeg"):
-            try:
-                work_jpeg(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        elif filename.endswith(".PNG") or filename.endswith(".png"):
-            try:
-                work_png(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        elif filename.endswith(".MOV") or filename.endswith(".mov"):
-            try:
-                work_mov(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        elif filename.endswith(".MP4") or filename.endswith(".mp4"):
-            try:
-                work_mp4(filename)
-            except:
-                print("Error: " + filename)
-                continue
-        else:
+        extension = os.path.splitext(filename)[1]
+
+        # If the file does not have a valid extension, skip it
+        if(extension not in valid_extensions):
+            continue
+
+        try:
+            work(filename, extension)
+        except:
+            # print("Error: " + filename)
+            work_alternate(filename, extension)
             continue
 
 #main===========================================================================
