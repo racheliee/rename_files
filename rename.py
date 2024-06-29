@@ -17,7 +17,7 @@ def get_exif(filename):
 def get_date(tags):
     date = str(tags["EXIF DateTimeOriginal"])
     date = date.replace(":", "")
-    date = date.replace(" ", "")
+    date = date.replace(" ", "") 
     return date[0:8] + "_" + date[8:12]
 
 def get_alternate_date(filename):
@@ -54,7 +54,10 @@ def get_alternate_date(filename):
         final_date += "12"
     
     #add date_time
-    final_date += date[6:8] + "_" + date[8:12]
+    if (len(date) == 17):
+        final_date += "0"+date[6] + "_" + date[7:11]
+    else :
+        final_date += date[6:8] + "_" + date[8:12]
     return final_date
 
 #change file names based on extention===========================================
